@@ -1,7 +1,10 @@
 package ru.edisoft;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Date;
 
+@XmlRootElement
 public class XMLRecord {
     private Long id;
     private String orderNumber;
@@ -17,6 +20,7 @@ public class XMLRecord {
         this.orderNumber = orderNumber;
     }
 
+    @XmlElement
     public String getOrderNumber() {
         return orderNumber;
     }
@@ -25,6 +29,7 @@ public class XMLRecord {
         this.originalXml = originalXml;
     }
 
+    @XmlElement
     public String getOriginalXml() {
         return originalXml;
     }
@@ -33,6 +38,7 @@ public class XMLRecord {
         this.transformedXml = transformedXml;
     }
 
+    @XmlElement
     public String getTransformedXml() {
         return transformedXml;
     }
@@ -41,7 +47,15 @@ public class XMLRecord {
         this.creationDate = creationDate;
     }
 
+    @XmlElement
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public static XMLRecord generateError(String errorMsg) {
+        XMLRecord error = new XMLRecord();
+        error.setOriginalXml(errorMsg);
+        error.setTransformedXml(errorMsg);
+        return error;
     }
 }

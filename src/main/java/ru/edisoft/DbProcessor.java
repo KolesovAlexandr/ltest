@@ -3,9 +3,11 @@ package ru.edisoft;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -40,8 +42,8 @@ public class DbProcessor {
         return jdbcTemplate.queryForObject("Select * from xmls where id = ?", new Object[]{id}, new MyRowMapper());
     }
 
-    public XMLRecord getByOrderNumber(String order_number) {
-        return jdbcTemplate.queryForObject("Select * from xmls where order_number = ?", new Object[]{order_number}, new MyRowMapper());
+    public Collection<XMLRecord> getByOrderNumber(String order_number) {
+        return jdbcTemplate.query("Select * from xmls where order_number = ?", new Object[]{order_number}, new MyRowMapper());
     }
 
 }

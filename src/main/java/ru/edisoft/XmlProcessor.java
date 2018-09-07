@@ -1,20 +1,17 @@
 package ru.edisoft;
 
-import org.apache.camel.component.file.strategy.FileRenameExclusiveReadLockStrategy;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
 
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Scanner;
 
 @Component
 public class XmlProcessor {
@@ -28,7 +25,7 @@ public class XmlProcessor {
     private String pathOut;
 
 
-    public void process(File file) {
+    public Integer process(File file) {
         try {
             ByteArrayOutputStream transformedXmlOS = xsltTransformer.transform(file);
             String transformedXmlSting = transformedXmlOS.toString();
@@ -41,10 +38,12 @@ public class XmlProcessor {
             Integer id = dbProcessor.save(orderNumber, getString(file), transformedXmlSting);
             Files.write(Paths.get(originalFilePath), getByte(file));
             Files.write(Paths.get(transformedFilePath), transformedXmlOS.toByteArray());
+            return id;
 
         } catch (XPathExpressionException | IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private String getString(File file) {
