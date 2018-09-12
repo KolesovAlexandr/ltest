@@ -4,46 +4,48 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
 
+import javax.jms.Message;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.List;
 
-@Component
+@Component("xmlProcessor")
 public class XmlProcessor {
 
     @Autowired
     private XsltTransformer xsltTransformer;
+
     @Autowired
-    private DbProcessor dbProcessor;
+    List<SaveProcessor> saveProcessors;
 
-    @Value("${pathOut}")
-    private String pathOut;
-
-
-    public Integer process(File file) {
+    public void process(File file) {
         try {
-            ByteArrayOutputStream transformedXmlOS = xsltTransformer.transform(file);
-            String transformedXmlSting = transformedXmlOS.toString();
-            InputSource source = new InputSource(new StringReader(transformedXmlSting));
-            XPathFactory xpathfactory = XPathFactory.newInstance();
-            XPath path = xpathfactory.newXPath();
-            String orderNumber = path.evaluate("/Interchange/Group/Message/Document-Order/Order-Header/OrderNumber", source);
-            String originalFilePath = pathOut + "/" + file.getName() + ".xml";
-            String transformedFilePath = pathOut + "/" + orderNumber + ".xml";
-            Integer id = dbProcessor.save(orderNumber, getString(file), transformedXmlSting);
-            Files.write(Paths.get(originalFilePath), getByte(file));
-            Files.write(Paths.get(transformedFilePath), transformedXmlOS.toByteArray());
-            return id;
-
-        } catch (XPathExpressionException | IOException e) {
+            String fileName = file.getName();
+            String[] separatedFileName = StringUtils.split(fileName, ".");
+            if (separatedFileName[separatedFileName.length - 1].equals("xml")) {
+                ByteArrayOutputStream transformedXmlOS = xsltTransformer.transform(file);
+                String transformedXmlSting = transformedXmlOS.toString();
+                String orderNumber = getOrderNumber(transformedXmlSting);
+                XmlRecordDTO dto = new XmlRecordDTO(separatedFileName[0], orderNumber, getString(file), transformedXmlSting);
+                for (SaveProcessor saveProcessor : saveProcessors) {
+                    saveProcessor.process(dto);
+                }
+            }
+        } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        return null;
+    }
+
+    private String getOrderNumber(String transformedXmlSting) throws XPathExpressionException {
+        InputSource source = new InputSource(new StringReader(transformedXmlSting));
+        XPathFactory xpathfactory = XPathFactory.newInstance();
+        XPath path = xpathfactory.newXPath();
+        return path.evaluate("/Interchange/Group/Message/Document-Order/Order-Header/OrderNumber", source);
     }
 
     private String getString(File file) {
@@ -55,17 +57,5 @@ public class XmlProcessor {
         }
     }
 
-    private byte[] getByte(File file) {
-        byte[] getBytes = {};
-        try {
-            getBytes = new byte[(int) file.length()];
-            InputStream is = new FileInputStream(file);
-            is.read(getBytes);
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return getBytes;
-    }
 
 }

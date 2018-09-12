@@ -2,28 +2,29 @@ package ru.edisoft.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.edisoft.DbProcessor;
-import ru.edisoft.XMLRecord;
+import ru.edisoft.XmlRecord;
+import ru.edisoft.XmlDAO;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RestController
-public class TestController {
+public class XmlController {
 
     @Autowired
-    private DbProcessor dbProcessor;
+    private XmlDAO dao;
 
     @RequestMapping("/")
     public String index() {
         return "Greetings from Spring Boot!";
     }
 
-    @RequestMapping(value = "/find/{orderNumber}", method = RequestMethod.GET)
-    public Collection<XMLRecord> findDocuments(@PathVariable(required = false) String orderNumber) {
+    @RequestMapping(value = {"/find/{orderNumber}","/find"}, method = RequestMethod.GET)
+    public Collection<XmlRecord> findDocuments(@PathVariable(required = false) String orderNumber) {
         if (orderNumber != null && !orderNumber.isEmpty()) {
-            return dbProcessor.getByOrderNumber(orderNumber);
+            return Collections.singleton(dao.getByOrderNumber(orderNumber));
         } else {
-            return dbProcessor.getAll();
+            return dao.getAll();
         }
     }
 
@@ -31,13 +32,18 @@ public class TestController {
     @ResponseBody
     public String select(@RequestParam(required = false) Integer id, @RequestParam(required = false) String orderNumber,
                          @RequestParam(required = false) Boolean original) {
+        XmlRecord record = null;
         if (id == null && orderNumber == null) {
             return "Must be specified id or orderNumber";
         }
         if (id != null) {
-            XMLRecord record = dbProcessor.getById(id);
-            return original ? record.getOriginalXml() : record.getTransformedXml();
+            record = dao.getById(id);
+
         }
-        return null;
+        if (orderNumber != null) {
+            record = dao.getByOrderNumber(orderNumber);
+        }
+        return record != null ? Boolean.TRUE.equals(original) ? record.getOriginalXml() : record.getTransformedXml() : "empty result";
+
     }
 }

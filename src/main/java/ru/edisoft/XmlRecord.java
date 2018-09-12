@@ -5,15 +5,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Date;
 
 @XmlRootElement
-public class XMLRecord {
+public class XmlRecord {
     private Long id;
     private String orderNumber;
     private String originalXml;
+
+    public XmlRecord() {
+    }
+
+    public XmlRecord(String orderNumber, String originalXml, String transformedXml) {
+        this.orderNumber = orderNumber;
+        this.originalXml = originalXml;
+        this.transformedXml = transformedXml;
+    }
+
     private String transformedXml;
     private Date creationDate;
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setOrderNumber(String orderNumber) {
@@ -52,10 +66,4 @@ public class XMLRecord {
         return creationDate;
     }
 
-    public static XMLRecord generateError(String errorMsg) {
-        XMLRecord error = new XMLRecord();
-        error.setOriginalXml(errorMsg);
-        error.setTransformedXml(errorMsg);
-        return error;
-    }
 }
