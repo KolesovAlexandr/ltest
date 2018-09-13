@@ -1,4 +1,6 @@
-package ru.edisoft;
+package ru.edisoft.dao;
+
+import ru.edisoft.entity.XmlRecord;
 
 import java.util.List;
 
@@ -10,5 +12,5 @@ public interface XmlDAO {
 
     XmlRecord getByOrderNumber(String order_number);
 
-    Integer create(XmlRecord record);
+    void create(XmlRecord record);
 }

@@ -1,17 +1,17 @@
-package ru.edisoft.impl;
+package ru.edisoft.processors.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.edisoft.SaveProcessor;
-import ru.edisoft.XmlRecord;
-import ru.edisoft.XmlDAO;
-import ru.edisoft.XmlRecordDTO;
+import ru.edisoft.processors.SaveProcessor;
+import ru.edisoft.entity.XmlRecord;
+import ru.edisoft.dao.XmlDAO;
+import ru.edisoft.dto.XmlRecordDTO;
 
 @Repository
 public class DatabaseProcessor implements SaveProcessor {
 
     @Autowired
-    XmlDAO xmlDAO;
+    private XmlDAO xmlDAO;
 
     @Override
     public void process(XmlRecordDTO dto) {

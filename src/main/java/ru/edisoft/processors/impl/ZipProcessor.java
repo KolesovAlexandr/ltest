@@ -1,17 +1,18 @@
-package ru.edisoft.impl;
+package ru.edisoft.processors.impl;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import ru.edisoft.SaveProcessor;
-import ru.edisoft.XmlRecordDTO;
+import ru.edisoft.processors.SaveProcessor;
+import ru.edisoft.dto.XmlRecordDTO;
 
 import java.io.*;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Repository
 public class ZipProcessor implements SaveProcessor {
+    private Logger logger = Logger.getLogger(ZipProcessor.class.getName());
 
     @Value("${zipPath}")
     private String zipPath;
@@ -34,7 +35,7 @@ public class ZipProcessor implements SaveProcessor {
 
 
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.warning("error during creating zip file");
         }
 
 

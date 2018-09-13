@@ -1,6 +1,7 @@
-package ru.edisoft;
+package ru.edisoft.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
+import ru.edisoft.entity.XmlRecord;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

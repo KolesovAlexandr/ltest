@@ -2,27 +2,23 @@ package ru.edisoft.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.edisoft.XmlRecord;
-import ru.edisoft.XmlDAO;
+import ru.edisoft.entity.XmlRecord;
+import ru.edisoft.dao.XmlDAO;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 @RestController
 public class XmlController {
 
+    public static final String ERROR_MESSAGE = "Must be specified id or orderNumber";
     @Autowired
     private XmlDAO dao;
 
-    @RequestMapping("/")
-    public String index() {
-        return "Greetings from Spring Boot!";
-    }
-
-    @RequestMapping(value = {"/find/{orderNumber}","/find"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/find/{orderNumber}", "/find"}, method = RequestMethod.GET)
     public Collection<XmlRecord> findDocuments(@PathVariable(required = false) String orderNumber) {
         if (orderNumber != null && !orderNumber.isEmpty()) {
-            return Collections.singleton(dao.getByOrderNumber(orderNumber));
+            return Arrays.asList(dao.getByOrderNumber(orderNumber));
         } else {
             return dao.getAll();
         }
@@ -34,7 +30,7 @@ public class XmlController {
                          @RequestParam(required = false) Boolean original) {
         XmlRecord record = null;
         if (id == null && orderNumber == null) {
-            return "Must be specified id or orderNumber";
+            return ERROR_MESSAGE;
         }
         if (id != null) {
             record = dao.getById(id);

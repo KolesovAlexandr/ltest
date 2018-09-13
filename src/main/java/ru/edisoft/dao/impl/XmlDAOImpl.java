@@ -1,12 +1,12 @@
-package ru.edisoft.impl;
+package ru.edisoft.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.edisoft.XmlRecord;
-import ru.edisoft.XmlDAO;
-import ru.edisoft.XmlRowMapper;
+import ru.edisoft.entity.XmlRecord;
+import ru.edisoft.dao.XmlDAO;
+import ru.edisoft.rowmapper.XmlRowMapper;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class XmlDAOImpl implements XmlDAO {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public List<XmlRecord> getAll() {
@@ -42,8 +42,8 @@ public class XmlDAOImpl implements XmlDAO {
 
 
     @Override
-    public Integer create(XmlRecord record) {
-        return jdbcTemplate.update("insert into xmls (order_number, original_xml, transformed_xml, creation_date) " + "values(?,  ?, ?, ?)",
+    public void create(XmlRecord record) {
+        jdbcTemplate.update("insert into xmls (order_number, original_xml, transformed_xml, creation_date) " + "values(?,  ?, ?, ?)",
                 new Object[]{record.getOrderNumber(), record.getOriginalXml(), record.getTransformedXml(), new Timestamp(System.currentTimeMillis())});
     }
 }

@@ -1,4 +1,4 @@
-package ru.edisoft;
+package ru.edisoft.dto;
 
 public class XmlRecordDTO {
 
