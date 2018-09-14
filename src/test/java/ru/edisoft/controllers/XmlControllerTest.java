@@ -18,15 +18,15 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class XmlControllerTest {
-    public static final String ORDER_NUMBER_1 = "order1";
+    public static final String ORDER_NUMBER_1 = "4513491158";
     public static final String ORDER_NUMBER_2 = "order2";
     public static final String ORDER_NUMBER_3 = "order3";
-    private static final String ORIGINAL_XML_1 = "originalXml1";
-    private static final String ORIGINAL_XML_2 = "originalXml2";
-    private static final String ORIGINAL_XML_3 = "originalXml3";
-    private static final String TRANSFORMED_XML_1 = "transformedXml1";
-    private static final String TRANSFORMED_XML_2 = "transformedXml2";
-    private static final String TRANSFORMED_XML_3 = "transformedXml3";
+    public static final String ORIGINAL_XML_1 = "originalXml1";
+    public static final String ORIGINAL_XML_2 = "originalXml2";
+    public static final String ORIGINAL_XML_3 = "originalXml3";
+    public static final String TRANSFORMED_XML_1 = "transformedXml1";
+    public static final String TRANSFORMED_XML_2 = "transformedXml2";
+    public static final String TRANSFORMED_XML_3 = "transformedXml3";
     public static final XmlRecord XML_RECORD_1 = new XmlRecord(ORDER_NUMBER_1, ORIGINAL_XML_1, TRANSFORMED_XML_1);
     public static final XmlRecord XML_RECORD_2 = new XmlRecord(ORDER_NUMBER_2, ORIGINAL_XML_2, TRANSFORMED_XML_2);
     public static final XmlRecord XML_RECORD_3 = new XmlRecord(ORDER_NUMBER_3, ORIGINAL_XML_3, TRANSFORMED_XML_3);

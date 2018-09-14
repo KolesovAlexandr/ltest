@@ -17,6 +17,14 @@ public class FileProcessor implements SaveProcessor {
     @Value("${pathOut}")
     private String pathOut;
 
+    public String getPathOut() {
+        return pathOut;
+    }
+
+    public void setPathOut(String pathOut) {
+        this.pathOut = pathOut;
+    }
+
     @Override
     public void process(XmlRecordDTO xmlRecord) {
 

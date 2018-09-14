@@ -26,7 +26,7 @@ public class XmlProcessor {
     private XsltTransformer xsltTransformer;
 
     @Autowired
-    List<SaveProcessor> saveProcessors;
+    private List<SaveProcessor> saveProcessors;
     @Value("${xpath.expression}")
     private String expression;
 
@@ -38,13 +38,11 @@ public class XmlProcessor {
             String transformedXml = xsltTransformer.transform(originalXml);
             String orderNumber = getOrderNumber(transformedXml);
             XmlRecordDTO dto = new XmlRecordDTO(separatedFileName[0], orderNumber, originalXml, transformedXml);
-            for (SaveProcessor saveProcessor : saveProcessors) {
-                saveProcessor.process(dto);
-            }
+            saveProcessors.forEach(saveProcessor -> saveProcessor.process(dto));
         }
     }
 
-    private String getOrderNumber(String transformedXmlSting) {
+    public String getOrderNumber(String transformedXmlSting) {
         InputSource source = new InputSource(new StringReader(transformedXmlSting));
         XPathFactory xpathfactory = XPathFactory.newInstance();
         XPath path = xpathfactory.newXPath();
